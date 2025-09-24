@@ -1,4 +1,3 @@
-// src/interfaces/github.interface.ts
 
 export interface GitHubUser {
   id: number;                 

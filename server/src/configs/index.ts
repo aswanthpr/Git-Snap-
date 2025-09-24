@@ -1,1 +1,1 @@
-export {redisClient,redis} from './redis.config';
+export {sequelize,initDB} from './sequelize.config';

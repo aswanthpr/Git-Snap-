@@ -5,12 +5,10 @@ import cors from "cors";
 import { corsOptions } from "./middlewares/third.party";
 import userRoutes from "./routes/user.routes"
 import { HttpResponse, HttpStatus } from "./constants";
-import { redisClient } from "./configs/index";
 import "dotenv/config"
-import { initDB } from "./configs/sequelize.config";
+import { initDB } from "./configs/index";
 
 const app: Application = express();
-export const redis = redisClient();
 initDB()
 
 
