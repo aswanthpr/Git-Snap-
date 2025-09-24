@@ -1,15 +1,18 @@
 import express, { type Application , Request, Response, json, urlencoded } from "express";
-import { corsOptions } from "./middlewares/third.party";
-import chatRoute from "./routes/chat.routes"
-import cors from "cors";
 import morgan from "morgan";
+import { env } from "process";
+import cors from "cors";
+import { corsOptions } from "./middlewares/third.party";
+import userRoutes from "./routes/user.routes"
 import { HttpResponse, HttpStatus } from "./constants";
 import { redisClient } from "./configs/index";
-import { env } from "process";
 import "dotenv/config"
+import { initDB } from "./configs/sequelize.config";
 
 const app: Application = express();
 export const redis = redisClient();
+initDB()
+
 
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
@@ -20,8 +23,8 @@ app.get("/health", (_req: Request, res: Response) => {
   res.status(HttpStatus.OK).json(HttpResponse.SUCCESS);
 });
 
-app.use("/chat", chatRoute);
-
+app.use("/api", userRoutes);
+ 
 app.listen(env['PORT'] as string, () => {
   console.log(`✳️  Server running at http://localhost:${env['PORT']} 🔥`);
 });

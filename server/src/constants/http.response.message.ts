@@ -1,21 +1,22 @@
 export enum HttpResponse {
     SERVER_ERROR= "Internal server error",
-    SUCCESS= "Success",
+    UPDATED_SUCCESSFULLY= "Successfully updated",
     PAGE_NOT_FOUND= "Route not found",
-
     INVALID_CREDENTIALS= "Invalid credentials",
     USER_CREATION_FAILED= "User creation failed",
-    
     RESOURCE_FOUND= "Resource found.",
-
     TOO_MANY_REQUESTS= "Too many requests, please try again later.",
- 
-    REQUIRED_SESSION_ID= "SESSION ID is required",
-
-    SESSION_CREATED="Session created",
-    SESSION_EXIST="Session esist",
-    INVALID_SESSION="Invalid session",
-    
+    USERNAME_REQUIRED= "User name is required",
+    SUCCESS="Sucess",
+    CREDENTIAL_REQUIRED="Credential Required",
     NOT_FOUND="not found",
-    FAILED_TO_UPDATE="Failed to update",
-}; 
+    RESOURCE_NOT_FOUND="Resource not found",
+    USER_NOT_FOUND="User not found!",
+    NO_MUTUAL_FRIENDS="No mutual friends found",
+    NO_FIELDS_FOR_UPDATE="No fields provided for update.",
+    NO_USERS_FOUND="No users found",
+    USER_FECHED_SUCCESSFULLY="Users fetched successfully",
+    USER_ALREADY_DELETED="User is already soft deleted",
+    INVALID_DELETE_ACTION="Invalid action. Must be 'delete' or 'restore'.",
+    USER_ACTIVE="User is already active",
+}

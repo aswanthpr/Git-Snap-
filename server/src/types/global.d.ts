@@ -6,9 +6,11 @@ declare namespace NodeJS {
 
     CLIENT_URL: string;
 
+    NODE_ENV: string;
+    
     DATABASE_URL: string;
 
-    NODE_ENV: string;
+    GITHUB_FETCH_URL: string;
 
   }
 }
