@@ -3,11 +3,16 @@ import { createHttpError } from "../utils";
 import { HttpResponse } from "../constants";
 import { GitHubRepository, GitHubUser } from "../types/types";
 
-const { GITHUB_FETCH_URL } = process.env;
+const { GITHUB_FETCH_URL,GITHUB_TOKEN } = process.env;
 
 const api: AxiosInstance = axios.create({
   baseURL: GITHUB_FETCH_URL,
-  timeout: 10000,
+  headers:{
+    Authorization:`Bearer ${GITHUB_TOKEN}`,
+    Accept:"application/vnd.github.v3+json",
+    'X-GitHub-Api-Version': '2022-11-28'
+  },
+  timeout: 5000,
 });
 
 export const fetchGitHubUser = async (
@@ -27,7 +32,7 @@ export const fetchGitHubUser = async (
 
 export const fetchGitHubRepos = async (
   userName: string
-): Promise<GitHubRepository[] | [null]> => {
+): Promise<GitHubRepository[] | []> => {
   try {
     const res = await api.get(`/${userName}/repos?per_page=100`);
     return res.data;
@@ -37,7 +42,7 @@ export const fetchGitHubRepos = async (
     } else {
       throw createHttpError(err.response?.status || 500, err.message || HttpResponse.SERVER_ERROR);
     }
-    return null;
+    return [];
   }
 };
 export const fetchGitHubFollowers = async (
@@ -52,7 +57,7 @@ export const fetchGitHubFollowers = async (
     } else {
        throw createHttpError(err.response?.status || 500, err.message || HttpResponse.SERVER_ERROR);
     }
-    return null;
+    return [];
   }
 };
 export const fetchGitHubFollowing = async (
@@ -67,6 +72,6 @@ export const fetchGitHubFollowing = async (
     } else {
        throw createHttpError(err.response?.status || 500, err.message || HttpResponse.SERVER_ERROR);
     }
-    return null;
+    return [];
   }
 };

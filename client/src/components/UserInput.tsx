@@ -3,6 +3,8 @@ import { useUserContext } from '../context/UserContext';
 import { Search } from 'lucide-react';
 import { validateUsername } from '../utils/validations';
 import { fetchGithubUser } from '../services/apis';
+// import toast from 'react-hot-toast';
+import type { IfetchUserResponse } from '../types';
 
 
 export default function UserInput() {
@@ -25,7 +27,7 @@ export default function UserInput() {
     dispatch({ type: 'SET_ERROR', payload: null });
 
     try {
-        const result = await fetchGithubUser(username);
+        const result = await fetchGithubUser(username) as IfetchUserResponse;
         if(result) {
 
           const {repo,user} = result;
@@ -37,8 +39,8 @@ export default function UserInput() {
             // Fetch repositories
             
             dispatch({ type: 'SET_REPOS', payload: { username, repos:repo } });
+            // toast.success(result?.message||"something went wrong")
         }
-      
     } catch (error) {
       dispatch({ 
         type: 'SET_ERROR', 

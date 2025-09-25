@@ -1,7 +1,8 @@
 import { Calendar, LinkIcon, MapPin } from "lucide-react";
 import { useUserContext } from "../context/UserContext";
-import type { IFriends, IUser } from "../types";
+import type { IfetchMutualResponse, IFriends, IUser } from "../types";
 import { fetchFollowers } from "../services/apis";
+// import toast from "react-hot-toast";
 
 interface UserInfoProps {
   user: IUser;
@@ -12,17 +13,19 @@ export default function UserInfo({ user }: UserInfoProps) {
 
   const handleFollowersClick = async () => {
     try {
-      const result = await fetchFollowers(user?.id);
+      const result = await fetchFollowers(user?.id) as IfetchMutualResponse;
       if (result) {
        
         const username = user?.username;
         dispatch({
           type: "SET_FOLLOWERS",
-          payload: { username, followers: result as IFriends[] },
+          payload: { username, followers: result?.mutual as IFriends[] },
         });
         dispatch({ type: 'SET_VIEW', payload: 'followers' });
+        // toast.success(result?.message||"something went wrong")
       } 
     } catch (error: unknown) {
+      
       console.log(error instanceof Error ? error : String(error));
     }
   };

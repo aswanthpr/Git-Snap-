@@ -1,4 +1,3 @@
-
 export interface IRepo {
   id: number;
   repoId: number;
@@ -29,11 +28,11 @@ export interface IUser {
 }
 export interface IFriends {
   id: number;
-  userId: number;          
-  friendId: number;       
+  userId: number;
+  friendId: number;
   username: string;
-  githUrl?:string;             
-  avatarUrl?: string;            
+  githUrl?: string;
+  avatarUrl?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -61,3 +60,15 @@ export type AppAction =
   | { type: "SELECT_USER"; payload: string }
   | { type: "SELECT_REPO"; payload: string }
   | { type: "SET_VIEW"; payload: "home" | "repo-details" | "followers" };
+export interface IfetchMutualResponse {
+  success: boolean;
+  message: string;
+  mutual: IFriends[];
+}
+
+export interface IfetchUserResponse {
+  user: IUser;
+  repo: IRepo[];
+  message:string;
+  success:boolean
+}

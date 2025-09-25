@@ -9,6 +9,6 @@ declare namespace NodeJS {
     DATABASE_URL: string;
 
     GITHUB_FETCH_URL: string;
-
+    GITHUB_TOKEN: string
   }
 }

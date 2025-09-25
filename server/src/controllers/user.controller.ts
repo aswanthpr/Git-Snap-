@@ -66,8 +66,7 @@ export const getUser = async (
       createdAt: new Date(data.created_at),
     });
     //save repo
-    let savedRepos = [];
-
+    
     const reposToSave = repos.map((repo: any) => ({
       repoId: repo.id,
       name: repo.name,
@@ -77,10 +76,24 @@ export const getUser = async (
       stargazers: repo.stargazers_count,
       userId: user.id,
     }));
+    
+    let savedRepos = [];
     if (reposToSave.length > 0) {
-      savedRepos = await Repository.bulkCreate(reposToSave, {
-  updateOnDuplicate: ["name", "description", "htmlUrl", "language", "stargazers"],
-});
+      try {
+        
+         savedRepos = await Repository.bulkCreate(reposToSave, {
+          updateOnDuplicate: [
+            "name",
+            "description",
+            "htmlUrl",
+            "language",
+            "stargazers",
+          ],
+        });
+        console.log(reposToSave.length,'len')
+      } catch (error) {
+         console.log(error instanceof Error ? error.message : error, "bulk write error");
+      }
     }
 
     //  Save mutual
@@ -91,7 +104,7 @@ export const getUser = async (
       repo: savedRepos.map((r) => r.toJSON()),
     });
   } catch (error: unknown) {
-    console.log(error instanceof Error? error.message : String(error))
+    console.log(error instanceof Error ? error.message : String(error));
     next(error);
   }
 };
@@ -112,7 +125,6 @@ export const getMutualFriends = async (
 
     const user = await User.findByPk(userId);
     if (!user) {
-  
       return res.status(HttpStatus.NOT_FOUND).json({
         success: false,
         message: HttpResponse.USER_NOT_FOUND,
@@ -192,14 +204,14 @@ export const searchUsers = async (
     const whereClause: any = {};
 
     if (username) {
-  whereClause.username = { [Op.iLike]: `%${username}%` };
-}
-if (location) {
-  whereClause.location = { [Op.iLike]: `%${location}%` };
-}
-if (publicRepos) {
-  whereClause.blog = { [Op.iLike]: `%${publicRepos}%` };
-}
+      whereClause.username = { [Op.iLike]: `%${username}%` };
+    }
+    if (location) {
+      whereClause.location = { [Op.iLike]: `%${location}%` };
+    }
+    if (publicRepos) {
+      whereClause.blog = { [Op.iLike]: `%${publicRepos}%` };
+    }
 
     const { rows: users, count: total } = await User.findAndCountAll({
       where: whereClause,
@@ -248,7 +260,7 @@ export const softDeleteUser = async (
       });
     }
 
-    const user = await User.findOne({ where: { username }, paranoid: false, });
+    const user = await User.findOne({ where: { username }, paranoid: false });
 
     if (!user) {
       return res.status(HttpStatus.NOT_FOUND).json({
@@ -260,19 +272,19 @@ export const softDeleteUser = async (
       if (user.deletedAt) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           success: false,
-          message:HttpResponse?.USER_ALREADY_DELETED ,
+          message: HttpResponse?.USER_ALREADY_DELETED,
         });
       }
-    
-    // Soft delete
-    await user.destroy();
 
-    return res.status(HttpStatus.OK).json({
-      success: true,
-      message: `'${username}' has been soft deleted successfully.`,
-      data: null,
-    });
-  }else if (action === "restore") {
+      // Soft delete
+      await user.destroy();
+
+      return res.status(HttpStatus.OK).json({
+        success: true,
+        message: `'${username}' has been soft deleted successfully.`,
+        data: null,
+      });
+    } else if (action === "restore") {
       if (!user.deletedAt) {
         return res.status(HttpStatus.BAD_REQUEST).json({
           success: false,
@@ -351,7 +363,6 @@ export const updateUserProfile = async (
   }
 };
 
-
 export const getAllUsers = async (
   req: Request,
   res: Response,
@@ -369,9 +380,10 @@ export const getAllUsers = async (
       "createdAt",
     ];
 
-    const sortField = typeof sortBy === "string" && allowedSortFields.includes(sortBy)
-      ? sortBy
-      : "createdAt";
+    const sortField =
+      typeof sortBy === "string" && allowedSortFields.includes(sortBy)
+        ? sortBy
+        : "createdAt";
 
     const sortOrder = order === "desc" ? "DESC" : "ASC";
 
@@ -396,7 +408,7 @@ export const getAllUsers = async (
 
     res.status(HttpStatus.OK).json({
       success: true,
-      message:HttpResponse?.USER_FECHED_SUCCESSFULLY,
+      message: HttpResponse?.USER_FECHED_SUCCESSFULLY,
       data: users.map((u) => u.toJSON()),
       pagination: {
         page: pageNumber,

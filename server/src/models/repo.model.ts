@@ -30,15 +30,20 @@ export class Repository extends Model<RepositoryAttributes, RepositoryCreationAt
 Repository.init(
   {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    repoId: { type: DataTypes.INTEGER, unique: true, allowNull: false },
+    repoId: { type: DataTypes.INTEGER, allowNull: false },
     name: { type: DataTypes.STRING, allowNull: false },
-    description: DataTypes.STRING,
-    htmlUrl: { type: DataTypes.STRING, allowNull: false },
+    description: DataTypes.TEXT,
+    htmlUrl: { type: DataTypes.STRING(500), allowNull: false },
     language: DataTypes.STRING,
     stargazers: { type: DataTypes.INTEGER, defaultValue: 0 },
     userId: { type: DataTypes.INTEGER, allowNull: false },
   },
-  { sequelize, tableName: "repositories" }
+  { sequelize, tableName: "repositories" ,indexes: [
+      {
+        unique: true,
+        fields: ["repoId", "userId"],
+      },
+    ],}
 );
 
 // Association
